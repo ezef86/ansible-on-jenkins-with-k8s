@@ -1,0 +1,67 @@
+---
+- name: Deploy Static Web App to Apache Server
+  hosts: all
+  become: yes
+  vars:
+    apache_conf_dir: /etc/apache2/sites-available
+    apache_site_name: ansible-site.conf
+  tasks:
+    - name: "Ensure OS is Ubuntu"
+      ansible.builtin.assert:
+        that: ansible_distribution == 'Ubuntu'
+        fail_msg: "This playbook is designed for Ubuntu servers only."
+
+    - name: "Install and configure Apache"
+      block:
+        - name: "Update apt cache"
+          ansible.builtin.apt:
+            update_cache: yes
+        - name: "Install apache2"
+          ansible.builtin.apt:
+            name: apache2
+            state: present
+        - name: "Ensure Apache is started and enabled"
+          ansible.builtin.service:
+            name: apache2
+            state: started
+            enabled: yes
+
+    - name: "Create website directory"
+      ansible.builtin.file:
+        path: "{{ site_dir }}"
+        state: directory
+        owner: "{{ site_owner }}"
+        group: "{{ site_group }}"
+        mode: "0755"
+
+    - name: "Copy environment-specific index.html"
+      ansible.builtin.copy:
+        src: "{{ site_index_src }}"
+        dest: "{{ site_dir }}/index.html"
+        owner: "{{ site_owner }}"
+        group: "{{ site_group }}"
+        mode: "0644"
+
+    - name: "Configure Apache site from template"
+      ansible.builtin.template:
+        src: "templates/apache.conf.j2"
+        dest: "{{ apache_conf_dir }}/{{ apache_site_name }}"
+      notify: Reload Apache
+
+    - name: "Enable the new site"
+      ansible.builtin.command: a2ensite {{ apache_site_name }}
+      args:
+        creates: "/etc/apache2/sites-enabled/{{ apache_site_name }}"
+      notify: Reload Apache
+
+    - name: "Disable the default site"
+      ansible.builtin.command: a2dissite 000-default.conf
+      args:
+        removes: "/etc/apache2/sites-enabled/000-default.conf"
+      notify: Reload Apache
+
+  handlers:
+    - name: Reload Apache
+      ansible.builtin.service:
+        name: apache2
+        state: reloaded

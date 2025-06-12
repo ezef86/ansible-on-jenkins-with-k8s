@@ -1,0 +1,2 @@
+[web-prod]
+33.33.33.33 ansible_user=ubuntu

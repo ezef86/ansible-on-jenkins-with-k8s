@@ -1,0 +1,6 @@
+---
+# Variables for the Production environment
+site_dir: /var/www/html/ansible_site
+site_owner: www-data
+site_group: www-data
+site_index_src: "files/prod/index.html"
