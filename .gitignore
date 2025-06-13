@@ -1,0 +1,50 @@
+# Byte-compiled / cache / temp files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ansible specific
+*.retry
+*.log
+*.tmp
+
+# Environment files
+.env
+.env.*
+
+# SSH files
+*.pem
+*.key
+
+# Docker
+*.tar
+*.img
+*.container
+*.pid
+*.sock
+.docker/
+.dockerignore
+
+# Jenkins
+*.jenkins*
+jenkins_home/
+Jenkinsfile.backup
+
+# System files
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
+
+# Other
+*.swp
+*.swo
+
+# Ignore inventory secrets
+inventory/*_secrets*
+
+# Ignore files and folders for this project
+files/dev/index.html
+files/test/index.html
+files/prod/index.html

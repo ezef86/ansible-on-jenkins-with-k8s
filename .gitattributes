@@ -1,0 +1,27 @@
+# Set default behavior to automatically normalize line endings
+* text=auto
+
+# Ensure shell scripts use LF
+*.sh text eol=lf
+
+# Ensure YAML files use LF
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Ensure Dockerfile and Jenkinsfile use LF
+Dockerfile text eol=lf
+Jenkinsfile text eol=lf
+
+# Treat templates as text
+*.j2 text
+
+# Mark binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+
+# Ansible vault files (if any) as binary
+*.vault binary
